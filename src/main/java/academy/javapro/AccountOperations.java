@@ -1,4 +1,4 @@
-package academy.javapro;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,8 +24,9 @@ public interface AccountOperations {
      * Withdraws the specified amount from the account.
      *
      * @param amount The amount to withdraw
+     * @return 
      */
-    void withdraw(double amount);
+    boolean withdraw(double amount);
 
     /**
      * Returns the current balance of the account.

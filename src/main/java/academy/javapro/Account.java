@@ -1,4 +1,3 @@
-package academy.javapro;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +73,10 @@ public abstract class Account implements AccountOperations {
     /**
      * Abstract method to withdraw money from the account.
      * Each account type implements its own withdrawal rules.
+     * @return 
      */
     @Override
-    public abstract void withdraw(double amount);
+    public abstract boolean withdraw(double amount);
 
     @Override
     public void logTransaction(String type, double amount) {

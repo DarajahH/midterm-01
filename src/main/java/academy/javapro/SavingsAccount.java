@@ -1,4 +1,4 @@
-package academy.javapro;
+
 
 /**
  * SavingsAccount class extending the abstract Account class.
@@ -27,24 +27,35 @@ public class SavingsAccount extends Account {
      * @return The calculated interest amount
      */
     public double calculateInterest() {
-        throw new UnsupportedOperationException("Method not implemented");
+    	 return getBalance() * (interestRate / 100);
     }
 
     /**
      * Applies the calculated interest to the account balance.
      */
     public void applyInterest() {
-        throw new UnsupportedOperationException("Method not implemented");
+    	double interest = calculateInterest();
+        setBalance(getBalance() + interest);
+        getTransactionHistory().add("INTEREST | $" + String.format("%.2f", interest) + " | Balance: $" + getBalance());
+        System.out.println("Interest applied: $" + String.format("%.2f", interest));
     }
-
     /**
      * Overrides the withdraw method with savings account-specific rules.
      * Ensures minimum balance is maintained.
      */
     @Override
-    public void withdraw(double amount) {
-        throw new UnsupportedOperationException("Method not implemented");
+    public boolean withdraw(double amount) {
+        if (getBalance() - amount >= MIN_BALANCE) {
+            setBalance(getBalance() - amount);
+            getTransactionHistory().add("WITHDRAWAL | $" + amount + " | Balance: $" + getBalance());
+            System.out.println("Withdrew $" + amount + " from savings account");
+            return true;
+        } else {
+            System.out.println("Cannot withdraw $" + amount + ". Minimum balance of $" + MIN_BALANCE + " must be maintained.");
+            return false;
+        }
     }
+
 
     /**
      * Overrides the displayInfo method to include savings account-specific information.
