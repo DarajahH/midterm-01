@@ -4,56 +4,77 @@ package academy.javapro;
  * SavingsAccount class extending the abstract Account class.
  * Features interest rate and minimum balance requirement.
  */
-public class SavingsAccount extends Account {
-    private final double interestRate;
-    private static final double MIN_BALANCE = 100.0; // Minimum balance requirement
+public class CheckingAccount extends Account {
+    private double overdraftLimit;
+    private static final double TRANSACTION_FEE = 1.5; // Fee per withdrawal
 
     /**
-     * Constructor for creating a new savings account.
+     * Constructor for creating a new checking account.
      *
      * @param accountNumber The account number
      * @param customerName The name of the account holder
      * @param initialBalance The initial balance
-     * @param interestRate The annual interest rate (%)
+     * @param overdraftLimit The maximum allowed overdraft
      */
-    public SavingsAccount(String accountNumber, String customerName, double initialBalance, double interestRate) {
+    public CheckingAccount(String accountNumber, String customerName, double initialBalance, double overdraftLimit) {
         super(accountNumber, customerName, initialBalance); // Call to the parent constructor
-        this.interestRate = interestRate;
+        this.overdraftLimit = overdraftLimit;
     }
 
     /**
-     * Calculates the interest amount based on the current balance.
+     * Getter for overdraft limit.
      *
-     * @return The calculated interest amount
+     * @return The overdraft limit
      */
-    public double calculateInterest() {
-        throw new UnsupportedOperationException("Method not implemented");
+    public double getOverdraftLimit() {
+    	 return overdraftLimit;
     }
 
     /**
-     * Applies the calculated interest to the account balance.
+     * Sets a new overdraft limit.
+     *
+     * @param overdraftLimit The new overdraft limit
      */
-    public void applyInterest() {
-        throw new UnsupportedOperationException("Method not implemented");
+    public void setOverdraftLimit(double newLimit) {
+        overdraftLimit = newLimit;
+        System.out.println("Overdraft limit updated to $" + newLimit);
     }
 
     /**
-     * Overrides the withdraw method with savings account-specific rules.
-     * Ensures minimum balance is maintained.
+     * Overrides the withdraw method with checking account-specific rules.
+     * Implements overdraft protection and applies transaction fees.
+     * @return 
      */
     @Override
-    public void withdraw(double amount) {
-        throw new UnsupportedOperationException("Method not implemented");
+    public boolean withdraw(double amount) {
+        double newBalance = getBalance() - amount - TRANSACTION_FEE;
+        if (newBalance >= -overdraftLimit) {
+            setBalance(newBalance);
+            getTransactionHistory().add("WITHDRAWAL | $" + amount + " | Balance: $" + getBalance());
+            getTransactionHistory().add("FEE | $" + TRANSACTION_FEE + " | Balance: $" + getBalance());
+            System.out.println("Withdrew $" + amount + " from checking account");
+            System.out.println("Transaction fee: $" + TRANSACTION_FEE);
+            if (getBalance() < 0) {
+                System.out.println("Account is in overdraft. Current balance: $" + getBalance());
+            }
+            return true;
+        } else {
+            System.out.println("Withdrawal failed: Overdraft limit exceeded.");
+            return false;
+        }
     }
 
+
     /**
-     * Overrides the displayInfo method to include savings account-specific information.
+     * Overrides the displayInfo method to include checking account-specific information.
      */
     @Override
     public void displayInfo() {
         super.displayInfo(); // Call to the parent method
-        System.out.println("Account Type: Savings Account");
-        System.out.println("Interest Rate: " + interestRate + "%");
-        System.out.println("Minimum Balance Requirement: $" + MIN_BALANCE);
+        System.out.println("Account Type: Checking Account");
+        System.out.println("Overdraft Limit: $" + String.format("%.2f", overdraftLimit));
+        System.out.println("Transaction Fee: $" + String.format("%.2f", TRANSACTION_FEE));
+    }
+}
     }
 }
